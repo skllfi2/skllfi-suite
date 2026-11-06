@@ -1,0 +1,471 @@
+:root {
+  /* Windows 11 Mica Alt & Acrylic Dark Palette */
+  --win-bg: rgba(30, 30, 32, 0.88);
+  --win-bg-solid: #1e1e20;
+  --win-stroke-default: rgba(255, 255, 255, 0.09);
+  --win-stroke-highlight: rgba(255, 255, 255, 0.16);
+  --win-surface-flyout: rgba(38, 38, 42, 0.95);
+  --win-subtle-secondary: rgba(255, 255, 255, 0.05);
+  --win-subtle-hover: rgba(255, 255, 255, 0.08);
+  --win-subtle-pressed: rgba(255, 255, 255, 0.04);
+  
+  /* WinUI Accent */
+  --win-accent: #60cdff;
+  --win-accent-dark: #0078d4;
+  --win-accent-tertiary: rgba(96, 205, 255, 0.15);
+  
+  /* Typography */
+  --win-text-primary: #ffffff;
+  --win-text-secondary: rgba(255, 255, 255, 0.78);
+  --win-text-tertiary: rgba(255, 255, 255, 0.54);
+  
+  /* Status Colors */
+  --fluent-green: #6ccb5f;
+  --fluent-yellow: #fce100;
+  --fluent-red: #ff99a4;
+  --fluent-orange: #ffaa44;
+
+  /* Easing */
+  --fluent-spring: cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  user-select: none;
+  -webkit-font-smoothing: antialiased;
+}
+
+body {
+  background: transparent;
+  color: var(--win-text-primary);
+  font-family: "Segoe UI Variable Text", "Segoe UI Variable", "Segoe UI", -apple-system, sans-serif;
+  overflow: hidden;
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  padding-top: 8px;
+}
+
+.island-container {
+  display: flex;
+  justify-content: center;
+  width: 100%;
+}
+
+/* ==========================================================
+   WINUI 3 FLUENT DYNAMIC PILL
+   ========================================================== */
+.fluent-island {
+  position: relative;
+  background: var(--win-bg);
+  backdrop-filter: blur(40px) saturate(160%);
+  -webkit-backdrop-filter: blur(40px) saturate(160%);
+  
+  border: 1px solid var(--win-stroke-default);
+  border-top-color: var(--win-stroke-highlight);
+  box-shadow: 
+    0 12px 32px rgba(0, 0, 0, 0.45),
+    0 2px 6px rgba(0, 0, 0, 0.2),
+    inset 0 1px 0 rgba(255, 255, 255, 0.08);
+
+  border-radius: 9999px;
+  overflow: hidden;
+  cursor: pointer;
+
+  transition: width 0.35s var(--fluent-spring),
+              height 0.35s var(--fluent-spring),
+              border-radius 0.35s var(--fluent-spring),
+              background 0.2s ease,
+              box-shadow 0.3s ease;
+}
+
+.fluent-island:hover {
+  background: rgba(36, 36, 40, 0.94);
+  border-color: rgba(255, 255, 255, 0.18);
+  box-shadow: 
+    0 16px 40px rgba(0, 0, 0, 0.55),
+    0 4px 10px rgba(0, 0, 0, 0.25),
+    inset 0 1px 0 rgba(255, 255, 255, 0.12);
+}
+
+.fluent-island.is-compact {
+  width: 250px;
+  height: 38px;
+}
+
+.fluent-island.is-expanded {
+  width: 440px;
+  height: 340px;
+  border-radius: 12px;
+  background: var(--win-surface-flyout);
+  cursor: default;
+  border-color: var(--win-stroke-highlight);
+  box-shadow: 
+    0 24px 54px rgba(0, 0, 0, 0.65),
+    0 8px 16px rgba(0, 0, 0, 0.3),
+    inset 0 1px 0 rgba(255, 255, 255, 0.14);
+}
+
+/* ==========================================================
+   COMPACT BAR
+   ========================================================== */
+.compact-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 38px;
+  padding: 0 10px 0 10px;
+}
+
+.compact-left {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+}
+
+.grip-icon {
+  font-size: 13px;
+  color: var(--win-text-tertiary);
+  cursor: grab;
+  line-height: 1;
+  padding: 2px 2px;
+}
+.grip-icon:hover {
+  color: var(--win-accent);
+}
+.grip-icon:active {
+  cursor: grabbing;
+}
+
+.status-dot-ring {
+  position: relative;
+  width: 8px;
+  height: 8px;
+}
+
+.status-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--fluent-green);
+  box-shadow: 0 0 10px rgba(108, 203, 95, 0.6);
+  transition: background 0.3s ease;
+}
+
+.status-dot.pulsing::after {
+  content: "";
+  position: absolute;
+  top: -3px; left: -3px; right: -3px; bottom: -3px;
+  border-radius: 50%;
+  border: 1.5px solid var(--fluent-green);
+  animation: fluent-pulse 1.8s infinite var(--fluent-spring);
+}
+
+@keyframes fluent-pulse {
+  0% { transform: scale(0.6); opacity: 1; }
+  100% { transform: scale(1.8); opacity: 0; }
+}
+
+.compact-title {
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--win-text-primary);
+  letter-spacing: -0.1px;
+}
+
+.compact-right {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.guard-pill {
+  font-size: 10px;
+  font-weight: 600;
+  padding: 1px 6px;
+  border-radius: 4px;
+  background: var(--win-accent-tertiary);
+  color: var(--win-accent);
+}
+
+.icon-gear-btn {
+  background: transparent;
+  border: none;
+  color: var(--win-text-tertiary);
+  font-size: 13px;
+  cursor: pointer;
+  padding: 2px 4px;
+  border-radius: 4px;
+  transition: all 0.15s ease;
+}
+.icon-gear-btn:hover {
+  color: #fff;
+  background: rgba(255, 255, 255, 0.1);
+}
+
+/* ==========================================================
+   EXPANDED FLYOUT
+   ========================================================== */
+.flyout-content {
+  opacity: 0;
+  pointer-events: none;
+  height: calc(100% - 38px);
+  padding: 0 16px 14px;
+  display: flex;
+  flex-direction: column;
+  transition: opacity 0.2s ease 0.08s;
+}
+
+.fluent-island.is-expanded .flyout-content {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+/* Pivot Tabs */
+.win-pivot {
+  display: flex;
+  align-items: center;
+  gap: 3px;
+  border-bottom: 1px solid var(--win-stroke-default);
+  padding-bottom: 8px;
+  margin-bottom: 12px;
+}
+
+.pivot-item {
+  background: transparent;
+  border: none;
+  font-size: 11px;
+  font-weight: 500;
+  color: var(--win-text-secondary);
+  padding: 4px 8px;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.pivot-item:hover {
+  background: var(--win-subtle-hover);
+  color: var(--win-text-primary);
+}
+
+.pivot-item.active {
+  color: var(--win-accent);
+  font-weight: 600;
+  background: var(--win-accent-tertiary);
+}
+
+.pivot-views {
+  flex: 1;
+  overflow-y: auto;
+  padding-right: 4px;
+}
+
+.pivot-views::-webkit-scrollbar {
+  width: 4px;
+}
+.pivot-views::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.15);
+  border-radius: 4px;
+}
+
+.view-page {
+  display: none;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.view-page.active {
+  display: flex;
+}
+
+/* Cards */
+.fluent-card {
+  background: var(--win-subtle-secondary);
+  border: 1px solid var(--win-stroke-default);
+  border-radius: 8px;
+  padding: 10px 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.card-header-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.card-title {
+  font-size: 10px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: var(--win-text-tertiary);
+}
+
+.card-value {
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--win-text-primary);
+}
+
+.fluent-console {
+  background: rgba(18, 18, 20, 0.9);
+  border: 1px solid var(--win-stroke-default);
+  border-radius: 6px;
+  padding: 8px 10px;
+  font-family: "Cascadia Code", "Consolas", monospace;
+  font-size: 11px;
+  line-height: 1.45;
+  color: var(--win-text-secondary);
+  max-height: 110px;
+  overflow-y: auto;
+}
+
+/* Buttons */
+.button-row {
+  display: flex;
+  gap: 8px;
+  margin-top: auto;
+}
+
+.win-btn {
+  flex: 1;
+  padding: 6px 12px;
+  font-size: 12px;
+  font-weight: 500;
+  border-radius: 6px;
+  cursor: pointer;
+  border: 1px solid var(--win-stroke-default);
+  transition: all 0.15s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+}
+
+.win-btn.standard {
+  background: var(--win-subtle-hover);
+  color: var(--win-text-primary);
+}
+.win-btn.standard:hover {
+  background: rgba(255, 255, 255, 0.12);
+}
+
+.win-btn.accent {
+  background: var(--win-accent-dark);
+  color: #ffffff;
+  border-color: rgba(255, 255, 255, 0.2);
+}
+.win-btn.accent:hover {
+  background: #0086f0;
+}
+
+.win-btn.danger {
+  color: var(--fluent-red);
+}
+.win-btn.danger:hover {
+  background: rgba(255, 153, 164, 0.15);
+  border-color: rgba(255, 153, 164, 0.3);
+}
+
+/* List Items */
+.win-list-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 6px 8px;
+  border-radius: 6px;
+  background: rgba(255, 255, 255, 0.03);
+}
+
+.item-left {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 12px;
+}
+
+.item-badge {
+  font-size: 9px;
+  font-weight: 700;
+  padding: 2px 6px;
+  border-radius: 4px;
+}
+.badge-now { background: var(--win-accent-tertiary); color: var(--win-accent); }
+.badge-shipped { background: rgba(108, 203, 95, 0.15); color: var(--fluent-green); }
+
+.diff-mono { font-family: "Cascadia Code", monospace; font-size: 11px; line-height: 1.5; }
+.diff-add { color: #8ee49d; background: rgba(108, 203, 95, 0.1); padding: 1px 4px; border-radius: 3px; }
+
+/* ==========================================================
+   SETTINGS STYLES
+   ========================================================== */
+.preset-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 6px;
+  margin-top: 4px;
+}
+
+.preset-btn {
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid var(--win-stroke-default);
+  color: var(--win-text-secondary);
+  font-size: 11px;
+  padding: 6px 4px;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.preset-btn:hover {
+  background: var(--win-subtle-hover);
+  color: #fff;
+}
+
+.preset-btn.active {
+  background: var(--win-accent-tertiary);
+  border-color: var(--win-accent);
+  color: var(--win-accent);
+  font-weight: 600;
+}
+
+.tip-text {
+  font-size: 11px;
+  color: var(--win-text-tertiary);
+  margin-top: 6px;
+}
+
+.setting-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 12px;
+}
+
+.setting-name {
+  color: var(--win-text-secondary);
+}
+
+.setting-val {
+  font-weight: 600;
+  color: var(--win-accent);
+}
+
+.win-slider {
+  width: 100%;
+  accent-color: var(--win-accent);
+  cursor: pointer;
+  margin-top: 4px;
+}
+
+.win-checkbox {
+  accent-color: var(--win-accent-dark);
+  cursor: pointer;
+  width: 16px;
+  height: 16px;
+}

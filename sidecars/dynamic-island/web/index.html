@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>WinUI 3 Dynamic Island</title>
+  <link rel="stylesheet" href="island.css">
+</head>
+<body>
+  <div class="island-container">
+    <div id="fluent-island" class="fluent-island is-compact">
+      
+      <!-- COMPACT PILL (Fluent Mica Design) -->
+      <div class="compact-bar" id="compact-bar">
+        <div class="compact-left" id="drag-handle">
+          <span class="grip-icon" title="Drag to move anywhere">⠿</span>
+          <div class="status-dot-ring">
+            <div class="status-dot pulsing" id="status-dot"></div>
+          </div>
+          <span class="compact-title" id="status-label">Antigravity</span>
+        </div>
+        
+        <div class="compact-right">
+          <span class="guard-pill armed" id="guard-chip">Loop Guard 1/2</span>
+          <button class="icon-gear-btn" id="btn-quick-settings" title="Quick Settings">⚙</button>
+        </div>
+      </div>
+
+      <!-- EXPANDED FLYOUT (WinUI 3 Acrylic Card) -->
+      <div class="flyout-content" id="flyout-content">
+        
+        <!-- WinUI Pivot Navigation -->
+        <nav class="win-pivot">
+          <button class="pivot-item active" data-page="page-agent">Status</button>
+          <button class="pivot-item" data-page="page-roadmap">Roadmap</button>
+          <button class="pivot-item" data-page="page-diff">Diffs</button>
+          <button class="pivot-item" data-page="page-memory">Memory</button>
+          <button class="pivot-item" data-page="page-settings">⚙ Settings</button>
+        </nav>
+
+        <!-- Pivot Views -->
+        <div class="pivot-views">
+          
+          <!-- Page 1: Agent & Console -->
+          <div class="view-page active" id="page-agent">
+            <div class="fluent-card">
+              <div class="card-header-row">
+                <span class="card-title">Runtime Engine</span>
+                <span class="card-value" style="color: var(--win-accent);">WinUI 3 Mica</span>
+              </div>
+              <div class="card-header-row">
+                <span class="card-title">Loop Guard Policy</span>
+                <span class="card-value" style="color: var(--fluent-green);">Max 2 Retries</span>
+              </div>
+            </div>
+
+            <div class="fluent-console" id="console-stream">
+              <div>[Live] Antigravity Bridge linked.</div>
+              <div>[Live] Position preset: top-center.</div>
+              <div>[Live] Ready for tasks.</div>
+            </div>
+
+            <div class="button-row">
+              <button class="win-btn accent" id="btn-simulate">Run Verification</button>
+              <button class="win-btn standard" id="btn-fail">Simulate Guard</button>
+            </div>
+          </div>
+
+          <!-- Page 2: Roadmap -->
+          <div class="view-page" id="page-roadmap">
+            <div class="fluent-card" style="gap: 8px;">
+              <div class="card-title">Active Task</div>
+              <div class="win-list-item">
+                <div class="item-left">
+                  <span class="item-badge badge-now">DOING</span>
+                  <span>Screen Docking & Position Presets</span>
+                </div>
+              </div>
+
+              <div class="card-title" style="margin-top: 4px;">Recent Deliveries</div>
+              <div class="win-list-item">
+                <div class="item-left">
+                  <span class="item-badge badge-shipped">SHIPPED</span>
+                  <span>WinUI 3 Fluent Redesign</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Page 3: Diff Sandbox -->
+          <div class="view-page" id="page-diff">
+            <div class="fluent-card">
+              <div class="card-header-row">
+                <span class="card-title">Modified Files</span>
+                <span style="font-size: 11px; color: var(--fluent-green);">+58 lines</span>
+              </div>
+              <div class="diff-mono" style="margin-top: 6px;">
+                <div class="diff-add">+ ApplyPositionPreset(preset)</div>
+                <div class="diff-add">+ WebMessageReceivedBridge</div>
+                <div class="diff-add">+ Acrylic Opacity Slider</div>
+                <div style="color: var(--win-text-tertiary); padding: 1px 4px;">  WindowStyle="None"</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Page 4: Project Memory -->
+          <div class="view-page" id="page-memory">
+            <div class="fluent-card">
+              <div class="card-title">Architectural Invariants</div>
+              <div style="font-size: 12px; color: var(--win-text-secondary); line-height: 1.5; margin-top: 4px;">
+                • Never loop more than twice on identical errors.<br>
+                • WinUI 3 desktop bridge communicates via native JSON IPC.<br>
+                • Target .NET 10 LTS environment.
+              </div>
+            </div>
+          </div>
+
+          <!-- Page 5: NEW SETTINGS PANEL -->
+          <div class="view-page" id="page-settings">
+            <div class="fluent-card">
+              <div class="card-title">Screen Position & Docking</div>
+              <div class="preset-grid">
+                <button class="preset-btn active" data-preset="top-center">Top Center</button>
+                <button class="preset-btn" data-preset="top-left">Top Left</button>
+                <button class="preset-btn" data-preset="top-right">Top Right</button>
+                <button class="preset-btn" data-preset="bottom-center">Bottom Center</button>
+                <button class="preset-btn" data-preset="bottom-right">Bottom Right</button>
+              </div>
+              <div class="tip-text">💡 You can also drag anywhere using the <b>⠿</b> handle.</div>
+            </div>
+
+            <div class="fluent-card">
+              <div class="setting-row">
+                <span class="setting-name">Mica Opacity</span>
+                <span class="setting-val" id="opacity-val">90%</span>
+              </div>
+              <input type="range" min="30" max="100" value="90" class="win-slider" id="opacity-slider">
+              
+              <div class="setting-row" style="margin-top: 8px;">
+                <span class="setting-name">Always on Top</span>
+                <input type="checkbox" id="topmost-toggle" checked class="win-checkbox">
+              </div>
+            </div>
+
+            <div class="button-row">
+              <button class="win-btn standard danger" id="btn-close-app">Exit Island</button>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="island.js"></script>
+</body>
+</html>

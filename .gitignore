@@ -1,0 +1,40 @@
+# Build & Binary Artifacts
+**/bin/
+**/obj/
+**/build/
+**/dist/
+*.exe
+*.dll
+*.pdb
+*.suo
+*.user
+
+# Node / JS
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Python & AI Caches
+__pycache__/
+*.pyc
+*.pyo
+.venv/
+env/
+venv/
+*.egg-info/
+
+# OS and Editor files
+.DS_Store
+Thumbs.db
+desktop.ini
+.vscode/
+.idea/
+
+# Sensitive & Local files
+*.env
+*.env.local
+*.key
+*.pem
+*.token
+credentials.json

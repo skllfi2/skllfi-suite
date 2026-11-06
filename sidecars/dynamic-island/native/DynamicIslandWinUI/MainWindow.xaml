@@ -1,0 +1,264 @@
+<Window
+    x:Class="DynamicIslandWinUI.MainWindow"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    Title="Dynamic Island Studio (AppWatch WinUI 3 Native)">
+
+    <Window.SystemBackdrop>
+        <MicaBackdrop />
+    </Window.SystemBackdrop>
+
+    <Grid Background="Transparent">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+
+        <!-- AppTitleBar -->
+        <TitleBar x:Name="AppTitleBar" Title="Dynamic Island Studio Pro — Antigravity Agent HUD" Subtitle="AppWatch WinUI 3 Native" Height="42" />
+
+        <!-- WinUI 3 NavigationView matching AppWatch Shell -->
+        <NavigationView Grid.Row="1"
+                        x:Name="NavView"
+                        PaneDisplayMode="Left"
+                        IsBackButtonVisible="Collapsed"
+                        IsSettingsVisible="False"
+                        OpenPaneLength="210"
+                        Background="Transparent"
+                        SelectionChanged="NavView_SelectionChanged">
+            <NavigationView.MenuItems>
+                <NavigationViewItem x:Name="NavItemActivity" Tag="activity" Content="Активность">
+                    <NavigationViewItem.Icon>
+                        <FontIcon Glyph="&#xE9D9;"/>
+                    </NavigationViewItem.Icon>
+                </NavigationViewItem>
+                <NavigationViewItem x:Name="NavItemProjects" Tag="projects" Content="Проекты">
+                    <NavigationViewItem.Icon>
+                        <FontIcon Glyph="&#xE8B7;"/>
+                    </NavigationViewItem.Icon>
+                </NavigationViewItem>
+                <NavigationViewItem x:Name="NavItemSkills" Tag="skills" Content="Навыки (Skills)">
+                    <NavigationViewItem.Icon>
+                        <FontIcon Glyph="&#xE945;"/>
+                    </NavigationViewItem.Icon>
+                </NavigationViewItem>
+                <NavigationViewItem x:Name="NavItemSessions" Tag="sessions" Content="Диалоги агента">
+                    <NavigationViewItem.Icon>
+                        <FontIcon Glyph="&#xE8BD;"/>
+                    </NavigationViewItem.Icon>
+                </NavigationViewItem>
+                <NavigationViewItem x:Name="NavItemTools" Tag="tools" Content="Инструменты">
+                    <NavigationViewItem.Icon>
+                        <FontIcon Glyph="&#xEC7A;"/>
+                    </NavigationViewItem.Icon>
+                </NavigationViewItem>
+                <NavigationViewItem x:Name="NavItemDiffs" Tag="diffs" Content="Diffs &amp; Notes">
+                    <NavigationViewItem.Icon>
+                        <FontIcon Glyph="&#xE8A5;"/>
+                    </NavigationViewItem.Icon>
+                </NavigationViewItem>
+            </NavigationView.MenuItems>
+
+            <!-- Main Content Area with Frame / StackPanels -->
+            <Grid Padding="24,16,24,24">
+                
+                <!-- View 1: Activity -->
+                <StackPanel x:Name="ViewActivity" Visibility="Visible" Spacing="14">
+                    <!-- Metrics Row -->
+                    <Grid ColumnSpacing="12">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+
+                        <!-- Project Card -->
+                        <Border Grid.Column="0" Style="{StaticResource AppWatchCardBorder}">
+                            <StackPanel Spacing="4">
+                                <TextBlock Text="АКТИВНЫЙ ПРОЕКТ" FontSize="10" FontWeight="Bold" Foreground="{StaticResource TextTertiaryBrush}"/>
+                                <TextBlock x:Name="TxtActiveProject" Text="AppWatch (active)" FontSize="14" FontWeight="SemiBold" Foreground="{StaticResource AccentHighlightBrush}"/>
+                            </StackPanel>
+                        </Border>
+
+                        <!-- Model Card -->
+                        <Border Grid.Column="1" Style="{StaticResource AppWatchCardBorder}">
+                            <StackPanel Spacing="4">
+                                <TextBlock Text="ТЕКУЩАЯ МОДЕЛЬ" FontSize="10" FontWeight="Bold" Foreground="{StaticResource TextTertiaryBrush}"/>
+                                <TextBlock Text="Gemini 3.8 Flash" FontSize="14" FontWeight="SemiBold"/>
+                            </StackPanel>
+                        </Border>
+
+                        <!-- Tokens/Cost Card -->
+                        <Border Grid.Column="2" Style="{StaticResource AppWatchCardBorder}">
+                            <StackPanel Spacing="4">
+                                <TextBlock Text="РАСХОД / ТОКЕНЫ" FontSize="10" FontWeight="Bold" Foreground="{StaticResource TextTertiaryBrush}"/>
+                                <TextBlock Text="$0.08 / ~28k" FontSize="14" FontWeight="SemiBold" Foreground="{StaticResource SuccessBrush}"/>
+                            </StackPanel>
+                        </Border>
+
+                        <!-- Loop Guard Card -->
+                        <Border Grid.Column="3" Style="{StaticResource AppWatchCardBorder}">
+                            <StackPanel Spacing="4">
+                                <TextBlock Text="LOOP GUARD" FontSize="10" FontWeight="Bold" Foreground="{StaticResource TextTertiaryBrush}"/>
+                                <TextBlock Text="Armed (2x Max)" FontSize="14" FontWeight="SemiBold" Foreground="{StaticResource AccentHighlightBrush}"/>
+                            </StackPanel>
+                        </Border>
+                    </Grid>
+
+                    <!-- Quick Command Bar -->
+                    <Border Style="{StaticResource AppWatchCardBorder}">
+                        <Grid ColumnSpacing="10">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto"/>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="Auto"/>
+                                <ColumnDefinition Width="Auto"/>
+                            </Grid.ColumnDefinitions>
+                            <TextBlock Text="⚡" FontSize="16" VerticalAlignment="Center" Foreground="{StaticResource AccentHighlightBrush}"/>
+                            <TextBox x:Name="CmdBox" Grid.Column="1" PlaceholderText="Быстрая команда агенту (например, 'Проведи аудит безопасности')..." VerticalAlignment="Center" KeyDown="CmdBox_KeyDown"/>
+                            <Button Grid.Column="2" Content="Отправить" Style="{ThemeResource AccentButtonStyle}" Click="BtnSendCmd_Click"/>
+                            <Button Grid.Column="3" Content="↺ Откат хода" Style="{ThemeResource DefaultButtonStyle}" Click="BtnRollback_Click" Foreground="{StaticResource WarningBrush}"/>
+                        </Grid>
+                    </Border>
+
+                    <!-- Live Terminal Output -->
+                    <Border Background="#0D0D11" BorderBrush="{ThemeResource CardStrokeColorDefault}" BorderThickness="1" CornerRadius="8" Padding="14" Height="260">
+                        <ScrollViewer>
+                            <TextBlock x:Name="TerminalText" FontFamily="Cascadia Code, Consolas" FontSize="12" LineHeight="20" TextWrapping="Wrap"/>
+                        </ScrollViewer>
+                    </Border>
+                </StackPanel>
+
+                <!-- View 2: Projects -->
+                <StackPanel x:Name="ViewProjects" Visibility="Collapsed" Spacing="12">
+                    <Grid>
+                        <TextBlock Text="РАБОЧИЕ ПРОЕКТЫ ANTIGRAVITY" FontSize="12" FontWeight="Bold" Foreground="{StaticResource TextTertiaryBrush}" VerticalAlignment="Center"/>
+                        <Button Content="+ Добавить папку" HorizontalAlignment="Right" Click="BtnAddFolder_Click"/>
+                    </Grid>
+                    <ListView x:Name="ProjectsListView" Height="380" SelectionChanged="ProjectsListView_SelectionChanged">
+                        <ListView.ItemTemplate>
+                            <DataTemplate>
+                                <Border Style="{StaticResource AppWatchCardBorder}" Margin="0,3">
+                                    <Grid ColumnSpacing="12">
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="Auto"/>
+                                            <ColumnDefinition Width="*"/>
+                                            <ColumnDefinition Width="Auto"/>
+                                        </Grid.ColumnDefinitions>
+                                        <TextBlock Text="📁" FontSize="18" VerticalAlignment="Center"/>
+                                        <StackPanel Grid.Column="1" VerticalAlignment="Center" Spacing="2">
+                                            <TextBlock Text="{Binding Name}" FontSize="14" FontWeight="SemiBold"/>
+                                            <TextBlock Text="{Binding FullPath}" FontSize="11" Foreground="{StaticResource TextTertiaryBrush}"/>
+                                        </StackPanel>
+                                        <Button Grid.Column="2" Content="Выбрать" VerticalAlignment="Center" Click="BtnSelectProject_Click" Tag="{Binding FullPath}"/>
+                                    </Grid>
+                                </Border>
+                            </DataTemplate>
+                        </ListView.ItemTemplate>
+                    </ListView>
+                </StackPanel>
+
+                <!-- View 3: Skills -->
+                <StackPanel x:Name="ViewSkills" Visibility="Collapsed" Spacing="12">
+                    <TextBlock Text="СПЕЦИАЛИЗИРОВАННЫЕ НАВЫКИ AGENT SKILLS" FontSize="12" FontWeight="Bold" Foreground="{StaticResource TextTertiaryBrush}"/>
+                    <ListView x:Name="SkillsListView" Height="400">
+                        <ListView.ItemTemplate>
+                            <DataTemplate>
+                                <Border Style="{StaticResource AppWatchCardBorder}" Margin="0,4">
+                                    <Grid ColumnSpacing="14">
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="Auto"/>
+                                            <ColumnDefinition Width="*"/>
+                                            <ColumnDefinition Width="Auto"/>
+                                        </Grid.ColumnDefinitions>
+                                        <TextBlock Text="{Binding Icon}" FontSize="22" VerticalAlignment="Center"/>
+                                        <StackPanel Grid.Column="1" VerticalAlignment="Center" Spacing="2">
+                                            <TextBlock Text="{Binding Name}" FontSize="14" FontWeight="SemiBold"/>
+                                            <TextBlock Text="{Binding Description}" FontSize="12" Foreground="{StaticResource TextSecondaryBrush}"/>
+                                        </StackPanel>
+                                        <Button Grid.Column="2" Content="Запустить" Style="{ThemeResource AccentButtonStyle}" VerticalAlignment="Center" Click="BtnRunSkill_Click" Tag="{Binding Command}"/>
+                                    </Grid>
+                                </Border>
+                            </DataTemplate>
+                        </ListView.ItemTemplate>
+                    </ListView>
+                </StackPanel>
+
+                <!-- View 4: Sessions -->
+                <StackPanel x:Name="ViewSessions" Visibility="Collapsed" Spacing="12">
+                    <Grid>
+                        <TextBlock Text="СИНХРОНИЗИРОВАННЫЕ ДИАЛОГИ ANTIGRAVITY" FontSize="12" FontWeight="Bold" Foreground="{StaticResource TextTertiaryBrush}" VerticalAlignment="Center"/>
+                        <Button Content="↻ Обновить" HorizontalAlignment="Right" Click="BtnRefreshSessions_Click"/>
+                    </Grid>
+                    <ListView x:Name="SessionsListView" Height="380">
+                        <ListView.ItemTemplate>
+                            <DataTemplate>
+                                <Border Style="{StaticResource AppWatchCardBorder}" Margin="0,4">
+                                    <StackPanel Spacing="4">
+                                        <Grid>
+                                            <TextBlock Text="{Binding Title}" FontSize="13" FontWeight="SemiBold"/>
+                                            <Border Background="{Binding StatusBg}" CornerRadius="4" Padding="6,2" HorizontalAlignment="Right">
+                                                <TextBlock Text="{Binding StatusText}" FontSize="10" FontWeight="Bold" Foreground="{Binding StatusColor}"/>
+                                            </Border>
+                                        </Grid>
+                                        <TextBlock Text="{Binding Preview}" FontSize="12" Foreground="{StaticResource TextSecondaryBrush}" TextTrimming="CharacterEllipsis"/>
+                                        <TextBlock Text="{Binding StepCountInfo}" FontSize="10" Foreground="{StaticResource TextTertiaryBrush}"/>
+                                    </StackPanel>
+                                </Border>
+                            </DataTemplate>
+                        </ListView.ItemTemplate>
+                    </ListView>
+                </StackPanel>
+
+                <!-- View 5: Tools Launcher -->
+                <StackPanel x:Name="ViewTools" Visibility="Collapsed" Spacing="12">
+                    <Grid>
+                        <TextBlock Text="БЫСТРЫЙ ЗАПУСК ИНСТРУМЕНТОВ РАЗРАБОТЧИКА" FontSize="12" FontWeight="Bold" Foreground="{StaticResource TextTertiaryBrush}" VerticalAlignment="Center"/>
+                        <Button Content="+ Добавить инструмент" HorizontalAlignment="Right" Click="BtnAddTool_Click"/>
+                    </Grid>
+                    <GridView x:Name="ToolsGridView" Height="380">
+                        <GridView.ItemTemplate>
+                            <DataTemplate>
+                                <Button Style="{StaticResource AppWatchTileButton}" Width="260" Margin="4" Click="BtnLaunchTool_Click" Tag="{Binding Command}">
+                                    <Grid ColumnSpacing="10">
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="Auto"/>
+                                            <ColumnDefinition Width="*"/>
+                                        </Grid.ColumnDefinitions>
+                                        <TextBlock Text="{Binding Icon}" FontSize="20" VerticalAlignment="Center"/>
+                                        <StackPanel Grid.Column="1" VerticalAlignment="Center">
+                                            <TextBlock Text="{Binding Title}" FontSize="13" FontWeight="SemiBold"/>
+                                            <TextBlock Text="{Binding Subtitle}" FontSize="11" Foreground="{StaticResource TextSecondaryBrush}"/>
+                                        </StackPanel>
+                                    </Grid>
+                                </Button>
+                            </DataTemplate>
+                        </GridView.ItemTemplate>
+                    </GridView>
+                </StackPanel>
+
+                <!-- View 6: Diffs -->
+                <StackPanel x:Name="ViewDiffs" Visibility="Collapsed" Spacing="12">
+                    <Border Style="{StaticResource AppWatchCardBorder}">
+                        <StackPanel Spacing="6">
+                            <TextBlock Text="ПОНЯТНОЕ РЕЗЮМЕ ИЗМЕНЕНИЙ (APPWATCH NATIVE WINUI 3)" FontSize="13" FontWeight="Bold" Foreground="{StaticResource AccentHighlightBrush}"/>
+                            <TextBlock Text="• Архитектура: Чистый WinUI 3 (WindowsAppSDK 2.5.1) + MicaBackdrop + .NET 10 LTS&#x0a;• Оболочка: Нативный NavigationView с открытой панелью, TitleBar и скругленными карточками&#x0a;• Синхронизация: Прямое чтение сессий Antigravity и запуск Agent Skills" FontSize="12" Foreground="{StaticResource TextSecondaryBrush}" LineHeight="18"/>
+                        </StackPanel>
+                    </Border>
+                    <Border Background="#0D0D11" BorderBrush="{ThemeResource CardStrokeColorDefault}" BorderThickness="1" CornerRadius="8" Padding="14" Height="260">
+                        <ScrollViewer>
+                            <TextBlock FontFamily="Cascadia Code, Consolas" FontSize="12" LineHeight="20">
+                                <Run Text="@@ WinUI 3 AppWatch Migration Complete @@" Foreground="{StaticResource TextTertiaryBrush}"/><LineBreak/>
+                                <Run Text="+ Microsoft.WindowsAppSDK 2.5.1 MicaBackdrop" Foreground="{StaticResource SuccessBrush}"/><LineBreak/>
+                                <Run Text="+ NavigationView navigation system with page caching" Foreground="{StaticResource SuccessBrush}"/><LineBreak/>
+                                <Run Text="+ Full integration with Antigravity SQLite workspace store" Foreground="{StaticResource SuccessBrush}"/>
+                            </TextBlock>
+                        </ScrollViewer>
+                    </Border>
+                </StackPanel>
+
+            </Grid>
+        </NavigationView>
+    </Grid>
+</Window>

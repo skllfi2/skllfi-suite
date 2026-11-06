@@ -1,0 +1,19 @@
+{
+  "display_name": "Dynamic Island Native HUD",
+  "description": "Desktop floating Dynamic Island overlay with task roadmap, live terminal monitor, and anti-churn protection.",
+  "command": "bin/Release/net10.0-windows/DynamicIsland.exe",
+  "args": [],
+  "restart_policy": "on-failure",
+  "has_web_ui": true,
+  "ui_config": {
+    "title": "Dynamic Island HUD",
+    "views": [
+      {
+        "id": "island-hud",
+        "title": "Dynamic Island",
+        "entrypoint": "SIDECAR_UI_ENTRYPOINT_AUX_PANE",
+        "path": "web/index.html"
+      }
+    ]
+  }
+}
