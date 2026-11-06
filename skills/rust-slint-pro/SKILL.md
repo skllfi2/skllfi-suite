@@ -13,10 +13,11 @@ metadata:
 - Handling background threads, asynchronous operations, and dispatching UI updates via Slint's event loop.
 - Structuring adaptive layouts, avoiding deprecated Slint properties, fixing scroll view autoscroll, and optimizing performance.
 - Integrating Rust with Windows Service Control Manager (SCM), WinDivert, Win32 API (`windows` crate), and system tray.
+- Organizing clean single-executable desktop architecture, `%LOCALAPPDATA%` isolation, and dynamic config parsers.
 
 ## Do not use this skill when
 
-- The project uses web frontend technologies (Electron, Tauri, React/Vue/Tauri) without Slint.
+- The project uses web frontend technologies (Electron, Tauri, React/Vue) without Slint.
 - The task is purely non-Rust backend/cloud infrastructure unrelated to desktop GUI or native Windows tooling.
 
 ---
@@ -139,7 +140,7 @@ std::thread::scope(|s| {
 
 ---
 
-## 4. Build Environment & Portability Conventions
+## 4. Build Environment, Portability & AppData Hygiene
 
 ### MSVC Toolchain & Linking
 When compiling on Windows with MSVC, always initialize the developer command prompt to prevent `LNK1104: cannot open msvcrt.lib`:
@@ -147,8 +148,15 @@ When compiling on Windows with MSVC, always initialize the developer command pro
 cmd /c "`"C:\Program Files (x86)\Microsoft Visual Studio\18\BuildTools\VC\Auxiliary\Build\vcvars64.bat`" && cargo build --release"
 ```
 
-### Portable File Resolution Hierarchy
-Desktop utilities running as services or helpers must prioritize local files next to the executable before system AppData:
-1. `current_exe().parent()` (Portable Mode)
-2. `%LOCALAPPDATA%/<app_name>` (Installed / Managed Mode)
-3. Working directory fallback
+### Application Identity & Storage Hygiene
+- **App Naming Consistency**: Ensure application binary name (`<app>.exe`), window titles, user agents, and storage directories (`%LOCALAPPDATA%\<app>`) are strictly aligned. Never leave outdated prototype names in paths.
+- **Directory Hierarchy**:
+  1. `%LOCALAPPDATA%\<app>\engine\` — binaries, drivers (`WinDivert`), preset scripts.
+  2. `%LOCALAPPDATA%\<app>\logs\` — application log files (`app.log`) with rotation.
+  3. `%LOCALAPPDATA%\<app>\reports\` — user-facing diagnostic and benchmark reports.
+  4. `%LOCALAPPDATA%\<app>\ui_settings.json` — user configuration.
+- **Dynamic Configuration Discovery**:
+  - Never hardcode script presets into Rust code.
+  - Dynamically scan and parse configuration scripts (`.bat` / `.conf`) on the fly so upstream engine updates take effect automatically without recompilation.
+- **Seamless Migration**:
+  - When migrating paths (e.g. from an old prototype path to the final app name), automatically detect the old location, copy settings/data forward, and preserve user state.
